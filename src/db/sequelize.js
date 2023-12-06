@@ -9,16 +9,16 @@ let sequelize
 
 if (process.env.NODE_ENV === 'production') {
     sequelize = new Sequelize(
-        'first-db',
-        'root',
-        '',
+        process.env.DB_NAME,
+        process.env.USERNAME,
+        process.env.PWD,
         {
-            host: 'localhost',
-            dialect: 'mariadb',
+            host: process.env.DB_HOST,
+            dialect: process.env.DIALECT,
             dialectOptions: {
                 timezone: 'Etc/GMT-2'
             },
-            logging: false
+            logging: console.log
         }
     )
 } else {
