@@ -1,0 +1,1 @@
+module.exports = 'STOCK_INVENTORY_private_key'
