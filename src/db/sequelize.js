@@ -7,6 +7,7 @@ const bcrypt = require("bcrypt")
 
 let sequelize
 
+console.log('----- creating sequelize -------')
 if (process.env.NODE_ENV === 'production') {
     sequelize = new Sequelize(
         process.env.DB_NAME,
@@ -15,7 +16,14 @@ if (process.env.NODE_ENV === 'production') {
         {
             host: process.env.DB_HOST,
             dialect: process.env.DIALECT,
-            logging: console.log
+            port: '3306',
+            logging: console.log,
+            pool: {
+                max: 30,
+                min: 0,
+                acquire: 60000,
+                idle: 5000
+            } 
         }
     )
 } else {
@@ -31,24 +39,23 @@ if (process.env.NODE_ENV === 'production') {
     )
 }
 
-sequelize.authenticate().then(() => {
-    console.log('Connection has been established successfully.');
- }).catch((error) => {
-    console.error('Unable to connect to the database: ', error);
- });
+console.log('trying to connect to db .......')
 
 const Product = ProductModel(sequelize, DataTypes)
 const User = UserModel(sequelize, DataTypes)
-const force = true;
+const force = false;
 const initDb = () => {
-    console.log('------------- SYNC --------')
-    return sequelize.sync({force}).then(_ => { 
-        createFromMock()
+    return sequelize.sync().then(_ => { 
+        // createFromMock()
+        bcrypt.hash('123', 10).then(hash => {
+            User.create({email: 'you@gmail.com', password: hash}).then(console.log('users created'))
+        })
         console.log('la base de donnée a bien été synchronisée') 
     })
 }
 
 const createFromMock = () => {
+    console.log('********* CREATING products **************')
     products.forEach(product => {
         Product.create(product).then(product => console.log(product.toJSON()))
     })
