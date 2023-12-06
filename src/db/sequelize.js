@@ -11,13 +11,10 @@ if (process.env.NODE_ENV === 'production') {
     sequelize = new Sequelize(
         process.env.DB_NAME,
         process.env.USERNAME,
-        process.env.PWD,
+        process.env.PASSWORD,
         {
             host: process.env.DB_HOST,
             dialect: process.env.DIALECT,
-            dialectOptions: {
-                timezone: 'Etc/GMT-2'
-            },
             logging: console.log
         }
     )
@@ -28,19 +25,23 @@ if (process.env.NODE_ENV === 'production') {
         '',
         {
             host: 'localhost',
-            dialect: 'mariadb',
-            dialectOptions: {
-                timezone: 'Etc/GMT-2'
-            },
+            dialect: 'mysql',
             logging: false
         }
     )
 }
 
+sequelize.authenticate().then(() => {
+    console.log('Connection has been established successfully.');
+ }).catch((error) => {
+    console.error('Unable to connect to the database: ', error);
+ });
+
 const Product = ProductModel(sequelize, DataTypes)
 const User = UserModel(sequelize, DataTypes)
 const force = true;
 const initDb = () => {
+    console.log('------------- SYNC --------')
     return sequelize.sync({force}).then(_ => { 
         createFromMock()
         console.log('la base de donnée a bien été synchronisée') 

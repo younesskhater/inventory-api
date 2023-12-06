@@ -10,6 +10,12 @@ const port = process.env.PORT || 3000
 app.use(favicon(__dirname + '/favicon.ico'))
    .use(bodyParser.json())
 
+// console.log('********** ENV ********** ', process.env)
+console.log(process.env.DB_NAME,
+   process.env.USERNAME,
+   process.env.PASSWORD,
+   process.env.DB_HOST,
+   process.env.DIALECT)
 sequelize.initDb()
 
 app.get('/', (req, res) => {
