@@ -10,7 +10,9 @@ const port = process.env.PORT || 3000
 app.use(favicon(__dirname + '/favicon.ico'))
    .use(bodyParser.json())
 
-sequelize.initDb()
+sequelize.initDb().then(_ => {
+   app.listen( port, () => console.log(`notre application node est démarrée sur : ${process.env.HOST || port}`))
+})
 
 app.get('/', (req, res) => {
    res.send('deployment has been done successfully')
@@ -33,6 +35,3 @@ require('./src/routes/user/create-user.js')(app)
 app.use(({res}) => {
    res.status(404).json({ message: 'Impossible de trouver la ressource demandée ! Verifiez votre URL ou essayez une autre' })
 })
-
-
-app.listen( port, () => console.log(`notre application node est démarrée sur : ${process.env.HOST || port}`))

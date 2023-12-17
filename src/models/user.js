@@ -5,6 +5,22 @@ module.exports = (sequelize, DataTypes) => {
          primaryKey: true,
          autoIncrement: true
      },
+     firstName: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        validate: {
+            notEmpty: { msg: 'Please entrer your first name'},
+            notNull: { msg: 'the first name can not be null'}
+        }
+    },
+    lastName: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        validate: {
+            notEmpty: { msg: 'Please entrer your first name'},
+            notNull: { msg: 'the first name can not be null'}
+        }
+    },
      email: {
          type: DataTypes.STRING,
          allowNull: false,

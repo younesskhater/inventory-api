@@ -1,3 +1,16 @@
+const isCharacteristicsValid = (characteristics) => {
+    const characteristicsList = characteristics.split(',').map(characteristic => { 
+        const keyValue = characteristic.split(':')
+        return keyValue[0]
+    })
+    if (characteristicsList.length > 10) {
+        throw new Error('Characteristics can\'t exceed 10')
+    }
+    const hasDuplication = new Set(characteristicsList).size !== characteristicsList.length;
+    if (hasDuplication) {
+        throw new Error('Characteristics should not be duplicated')
+    }
+}
 module.exports = (sequelize, DataTypes) => {
    return sequelize.define('Product', {
     id: {
@@ -29,6 +42,14 @@ module.exports = (sequelize, DataTypes) => {
             notNull: { msg: 'The category of the product is required'}
         }
     },
+    description: {
+        type: DataTypes.STRING,
+        allowNull: true,
+        validate: {
+            // notEmpty: { msg: 'Please write a description'},
+            // notNull: { msg: 'The description of the product is required'}
+        }
+    },
     material: {
         type: DataTypes.STRING,
         allowNull: false,
@@ -49,6 +70,13 @@ module.exports = (sequelize, DataTypes) => {
             }
         }
     },
+    weight: {
+        type: DataTypes.INTEGER,
+        allowNull: true,
+        validate: {
+            isInt: { msg: 'Please use integer numbers only'}
+        }
+    },
     characteristics: {
         type: DataTypes.STRING,
         allowNull: true,
@@ -64,24 +92,10 @@ module.exports = (sequelize, DataTypes) => {
             )
         },
         validate: {
-            isCharacteristicsValid(characteristics) {
-                const characteristicsList = characteristics.split(',').map(characteristic => { 
-                    const keyValue = characteristic.split(':')
-                    return keyValue[0]
-                })
-                if (characteristicsList.length > 10) {
-                    throw new Error('Characteristics can\'t exceed 10')
-                }
-                const hasDuplication = new Set(characteristicsList).size !== characteristicsList.length;
-                if (hasDuplication) {
-                    throw new Error('Characteristics should not be duplicated')
-                }
-                
-                
-
-            }
+            isCharacteristicsValid
         }
     }
+    // can add height, width, depth
    },
    {
     indexes: [
