@@ -49,8 +49,8 @@ Product.belongsTo(Category)
 
 const force = false;
 const initDb = () => {
-    return sequelize.sync({ force: true }).then(async () => { 
-        await insertMocks(Product, User)
+    return sequelize.sync().then(async () => { 
+        // await insertMocks(Product, User)
         console.log('la base de donnée a bien été synchronisée') 
     })
 }
