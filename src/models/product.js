@@ -58,18 +58,18 @@ module.exports = (sequelize, DataTypes) => {
             notNull: { msg: 'The material of the product is required'}
         }
     },
-    minQuantity: {
-        type: DataTypes.INTEGER,
-        allowNull: false,
-        validate: {
-            isInt: { msg: 'Please use integer numbers only'},
-            notNull: { msg: 'The minimum quantity is required'},
-            min: {
-                args: [1],
-                msg: 'The minimum quantity is 1'
-            }
-        }
-    },
+    // minQuantity: {
+    //     type: DataTypes.INTEGER,
+    //     allowNull: false,
+    //     validate: {
+    //         isInt: { msg: 'Please use integer numbers only'},
+    //         notNull: { msg: 'The minimum quantity is required'},
+    //         min: {
+    //             args: [1],
+    //             msg: 'The minimum quantity is 1'
+    //         }
+    //     }
+    // },
     weight: {
         type: DataTypes.INTEGER,
         allowNull: true,

@@ -4,27 +4,28 @@ const favicon = require('serve-favicon')
 const bodyParser = require('body-parser')
 const sequelize = require('./src/db/sequelize')
 const cors = require('cors');
+const corsOptions = require('./corsConfig.js')
 
 const app = express()
 const port = process.env.PORT || 3000
 
-if (process.env.NODE_ENV !== 'production') {
-   require('dotenv').config()
- }
+// if (process.env.NODE_ENV !== 'production') {
+//    require('dotenv').config()
+//  }
 
-const domainsFromEnv = process.env.CORS_DOMAINS || ""
-const whitelist = domainsFromEnv.split(',');
+// const domainsFromEnv = process.env.CORS_DOMAINS || ""
+// const whitelist = domainsFromEnv.split(',');
 
-const corsOptions = {
-  origin: function (origin, callback) {
-    if (!origin || whitelist.indexOf(origin) !== -1) {
-      callback(null, true)
-    } else {
-      callback(new Error('Not allowed by CORS'))
-    }
-  },
-  credentials: true,
-}
+// const corsOptions = {
+//   origin: function (origin, callback) {
+//     if (!origin || whitelist.indexOf(origin) !== -1) {
+//       callback(null, true)
+//     } else {
+//       callback(new Error('Not allowed by CORS'))
+//     }
+//   },
+//   credentials: true,
+// }
 app.use(cors(corsOptions))
 
 app.use(favicon(__dirname + '/favicon.ico'))
