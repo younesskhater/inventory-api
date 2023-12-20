@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { Box, Button, Container } from '@mui/material'
 import TextField from '@mui/material/TextField';
+import Grid from '@mui/material/Grid';
 import AccountCircle from '@mui/icons-material/AccountCircle';
 import Lock from '@mui/icons-material/Lock';
 
@@ -49,22 +50,28 @@ export default function Signup() {
       }
 
   return (
-    <div>
-        <Container maxWidth="sm">
-          <Box sx={{ display: 'flex', alignItems: 'flex-end' }}>
+    <Grid
+      container
+      direction='column'
+      alignItems='center'
+      justifyContent='center'
+      xs={{ minHeight: '100vh'}}>
+        <Grid item xs={3}>
+        <Box sx={{ display: 'flex', alignItems: 'flex-end' }}>
             <AccountCircle sx={{ color: 'action.active', mr: 1, my: 0.5 }} />
-            <TextField id="input-with-sx" label="Email" variant="standard" 
+            <TextField id="input-login" label="Email" variant="standard" 
               onChange={(e) => setUserName(e.target.value)}/>
           </Box>
           <Box sx={{ display: 'flex', alignItems: 'flex-end' }}>
             <Lock sx={{ color: 'action.active', mr: 1, my: 0.5 }} />
-            <TextField id="input-with-sx" type='password' 
+            <TextField id="input-pwd" type='password' 
               label="Password" onChange={(e) => setPassword(e.target.value)} variant="standard" />
           </Box>
           <Button variant="contained" onClick={signup}>Login</Button>
-        </Container>
-        { userName + '  *****  ' + password}
-    </div>
+        </Grid>
+          
+        { authentInfo.resp }
+    </Grid>
   )
 }
 
