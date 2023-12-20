@@ -32,6 +32,21 @@ module.exports = (sequelize, DataTypes) => {
             notEmpty: { msg: 'Please give a location to your warehouse'},
             notNull: { msg: 'The location of the warehouse is required'},
         }
+    },
+    type: {
+        type: DataTypes.STRING,
+        allowNull: true
+    },
+    moreDetails: {
+        type: DataTypes.STRING,
+        allowNull: true
+    },
+    hasRefrigeration: {
+        type: DataTypes.BOOLEAN,
+        allowNull: true,
+        validate: {
+            isBoolean: { msg: 'hasRefrigeration should be true or false'}
+        }
     }
    },
    {

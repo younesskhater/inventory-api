@@ -95,7 +95,7 @@ module.exports = (sequelize, DataTypes) => {
             isCharacteristicsValid
         }
     }
-    // can add height, width, depth
+    // can add height, width, depth, isRefrigerated
    },
    {
     indexes: [
