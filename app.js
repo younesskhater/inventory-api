@@ -31,6 +31,7 @@ app.use(cors(corsOptions))
 app.use(favicon(__dirname + '/favicon.ico'))
    .use(bodyParser.json())
 
+console.log('trying to connect to db .......')
 sequelize.initDb().then(_ => {
    app.listen( port, () => console.log(`notre application node est démarrée sur : ${process.env.HOST || port}`))
 })
