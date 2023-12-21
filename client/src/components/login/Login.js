@@ -5,12 +5,14 @@ import Grid from '@mui/material/Grid';
 import AccountCircle from '@mui/icons-material/AccountCircle';
 import Lock from '@mui/icons-material/Lock';
 import AuthContext from '../../contexts/AuthProvider';
+import { useNavigate } from 'react-router-dom';
 
-const LOGIN_URL = `${process.env.REACT_APP_BASE_URL || '' }/api/login`
-
+const LOGIN_URL = `${process.env.NODE_ENV === 'development' ? process.env.REACT_APP_BASE_URL: '' }/api/login`
+console.log(process.env)
 export default function Signup() {
 
     const { setAuth } = useContext(AuthContext)
+    const navigate = useNavigate()
 
     const emailRef = useRef()
     const errorRef = useRef()
@@ -44,9 +46,8 @@ export default function Signup() {
           .then((resp) => {
             if (resp.token) {
               setAuth({user: resp.userData, accessToken: resp.token })
-              
+              navigate('/dashboard', { replace: true})
             } else {
-              console.log('error', resp.message)
               setErrorMsg(resp.message)
               errorRef.current.focus()
             }
