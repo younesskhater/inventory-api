@@ -9,23 +9,6 @@ const corsOptions = require('./corsConfig.js')
 const app = express()
 const port = process.env.PORT || 3000
 
-// if (process.env.NODE_ENV !== 'production') {
-//    require('dotenv').config()
-//  }
-
-// const domainsFromEnv = process.env.CORS_DOMAINS || ""
-// const whitelist = domainsFromEnv.split(',');
-
-// const corsOptions = {
-//   origin: function (origin, callback) {
-//     if (!origin || whitelist.indexOf(origin) !== -1) {
-//       callback(null, true)
-//     } else {
-//       callback(new Error('Not allowed by CORS'))
-//     }
-//   },
-//   credentials: true,
-// }
 app.use(cors(corsOptions))
 
 app.use(favicon(__dirname + '/favicon.ico'))
@@ -55,7 +38,7 @@ app.get('*', function (_, res) {
    res.sendFile(
       path.join(__dirname,  './client/build/index.html'),
       function(error) {
-         res.status(500).json({ message: 'Launch front failed', error})
+         return res.status(500).json({ message: 'Launch front failed', error})
       }
    )
 })
@@ -66,4 +49,5 @@ app.get('*', function (_, res) {
 
 app.use(({res}) => {
    res.status(404).json({ message: 'Impossible de trouver la ressource demandée ! Verifiez votre URL ou essayez une autre' })
+   return;
 })

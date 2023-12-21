@@ -10,11 +10,12 @@ module.exports = (app) => {
             { email: req.body.email }
         }).then(user => {
             console.log('********* USER Found ******')
+            
             if (user) {
                 bcrypt.compare(req.body.password, user.password)
                     .then(isPasswordValid => {
                         if(!isPasswordValid) {
-                            return res.status(401).json('the combination email or password is incorrect')
+                            return res.status(401).json({ message: 'the combination email or password is incorrect' })
                         }
 
                         // JWT
@@ -23,11 +24,14 @@ module.exports = (app) => {
                             privateKey,
                             { expiresIn: '24h'}
                         )
-                        const { password, ...data } = user.toJSON();
-                        return res.status(200).json({ message: 'authenticated successufully', data,  token })
+                        const { password, ...userData } = user.toJSON();
+                        return res.status(200).json({ message: 'authenticated successufully', userData,  token })
+                    })
+                    .catch(error => {
+                        return res.status(500).json({message: 'We coundn\'t authenticate you, please try later', error })
                     })
             } else {
-                res.status(401).json('the combination email or password is incorrect')
+                return res.status(401).json({ message:'the combination email or password is incorrect' })
             }
         })
         .catch(error => {

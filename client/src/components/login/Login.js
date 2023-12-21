@@ -1,55 +1,69 @@
-import React, { useState } from 'react'
-import { Box, Button, Container } from '@mui/material'
+import React, { useContext, useEffect, useRef, useState } from 'react'
+import { Box, Button } from '@mui/material'
 import TextField from '@mui/material/TextField';
 import Grid from '@mui/material/Grid';
 import AccountCircle from '@mui/icons-material/AccountCircle';
 import Lock from '@mui/icons-material/Lock';
+import AuthContext from '../../contexts/AuthProvider';
 
+const LOGIN_URL = `${process.env.REACT_APP_BASE_URL || '' }/api/login`
 
 export default function Signup() {
 
-    const [userName, setUserName] = useState('')
+    const { setAuth } = useContext(AuthContext)
+
+    const emailRef = useRef()
+    const errorRef = useRef()
+
+    const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
+    const [errorMsg, setErrorMsg] = useState('')
 
-    const [authentInfo, setAuthentInfo] = useState({ loading: false, resp: null})
+    const [loadig, setLoading] = useState(false)
 
-    // const fetchAllProducts = () => {
-    //     setAuthentInfo({ loading: true });
-    //     const apiUrl = `https://inventory-management-backend.cyclic.app/api/products`;
-    //     fetch(apiUrl, {
-    //         mode: 'no-cors',
-    //         method: "get",
-    //         headers: {
-    //              "Content-Type": "application/json"
-    //         }
-    //     })
-    //       .then((res) => res.json())
-    //       .then((resp) => {
-    //         setAuthentInfo({ loading: false, resp });
-    //       }).catch((error) => {
-    //         console.log('Error ======> ',error)
-    //       });
-    //   }
+    useEffect(() => {
+      emailRef.current.focus();
+    }, [])
+    
+    useEffect(() => {
+      setErrorMsg('')
+    }, [email, password])
 
       const signup = () => {
-        setAuthentInfo({ loading: true });
-        const apiUrl = `/api/login`;
-        fetch(apiUrl, {
+        setLoading(true);
+        fetch(LOGIN_URL, {
             method: "post",
             headers: {
                  "Content-Type": "application/json"
             },
-            body: JSON.stringify({email: userName, password})
+            body: JSON.stringify({email, password})
         })
-          .then((res) => res.json())
+          .then((resp) => { 
+            return resp.json()
+          })
           .then((resp) => {
-            setAuthentInfo({ loading: false, resp });
+            if (resp.token) {
+              setAuth({user: resp.userData, accessToken: resp.token })
+              
+            } else {
+              console.log('error', resp.message)
+              setErrorMsg(resp.message)
+              errorRef.current.focus()
+            }
+
+            setLoading(false);
           }).catch((error) => {
-            console.log('Error ======> ', error)
+            if (error?.message) {
+              setErrorMsg(error.message)
+            } else {
+              setErrorMsg('No server response, please try later')
+            }
+            errorRef.current.focus()
           });
       }
 
   return (
+    // use form instead
     <Grid
       container
       direction='column'
@@ -57,20 +71,22 @@ export default function Signup() {
       justifyContent='center'
       xs={{ minHeight: '100vh'}}>
         <Grid item xs={3}>
+          <p ref={errorRef} aria-live='assertive'>
+            { errorMsg }
+          </p>
         <Box sx={{ display: 'flex', alignItems: 'flex-end' }}>
             <AccountCircle sx={{ color: 'action.active', mr: 1, my: 0.5 }} />
-            <TextField id="input-login" label="Email" variant="standard" 
-              onChange={(e) => setUserName(e.target.value)}/>
+            <TextField ref={emailRef} id="input-login" label="Email" variant="standard" 
+              value={email} onChange={(e) => setEmail(e.target.value)} required/>
           </Box>
           <Box sx={{ display: 'flex', alignItems: 'flex-end' }}>
             <Lock sx={{ color: 'action.active', mr: 1, my: 0.5 }} />
-            <TextField id="input-pwd" type='password' 
-              label="Password" onChange={(e) => setPassword(e.target.value)} variant="standard" />
+            <TextField id="input-pwd" type='password' label="Password" 
+              value={password} onChange={(e) => setPassword(e.target.value)} variant="standard" required/>
           </Box>
           <Button variant="contained" onClick={signup}>Login</Button>
+          <p> Need and account ?</p>
         </Grid>
-          
-        { authentInfo.resp }
     </Grid>
   )
 }
