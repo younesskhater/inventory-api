@@ -5,6 +5,7 @@ const bodyParser = require('body-parser')
 const sequelize = require('./src/db/sequelize')
 const cors = require('cors');
 const corsOptions = require('./corsConfig.js')
+const { error } = require('console')
 
 const app = express()
 const port = process.env.PORT || 3000
@@ -15,9 +16,14 @@ app.use(favicon(__dirname + '/favicon.ico'))
    .use(bodyParser.json())
 
 console.log('trying to connect to db .......')
+
 sequelize.initDb().then(_ => {
    app.listen( port, () => console.log(`notre application node est démarrée sur : ${process.env.HOST || port}`))
+}).catch(_ => {
+   console.log('could not connect to database please try again')
+   process.exit(1)
 })
+
 
 // login endpoint
 require('./src/routes/authentication/login.js')(app)
