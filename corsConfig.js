@@ -14,6 +14,7 @@ if (process.env.NODE_ENV !== 'production') {
             callback(new Error('Not allowed by CORS'))
           }
         },
+        optionsSuccessStatus: 200,
         credentials: true
       }
 
