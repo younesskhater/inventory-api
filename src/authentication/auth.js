@@ -1,6 +1,10 @@
 const jwt = require('jsonwebtoken')
-const pivateKey = require('./private-key')
-const privateKey = require('./private-key')
+
+if (process.env.NODE_ENV !== 'production') {
+    require('dotenv').config()
+ }
+
+const privateKey = process.env.ACCESS_TOKEN_SECRET
 
 module.exports = (req, res, next) => {
 
@@ -9,7 +13,6 @@ module.exports = (req, res, next) => {
     if (!authorizationHeader) {
         return res.status(401).json({ message: 'You are not authorized to access the API' })
     }
-
 
     const token = authorizationHeader.split(' ')[1]
     const decodedToken = jwt.verify(token, privateKey, (error, decodedToken) => {

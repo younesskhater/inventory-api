@@ -15,7 +15,6 @@ app.use(favicon(__dirname + '/favicon.ico'))
    .use(bodyParser.json())
 
 console.log('trying to connect to db .......')
-
 sequelize.initDb().then(_ => {
    app.listen( port, () => console.log(`notre application node est démarrée sur : ${process.env.HOST || port}`))
 }).catch(_ => {
@@ -23,13 +22,8 @@ sequelize.initDb().then(_ => {
    process.exit(1)
 })
 
-
-// login endpoint
-require('./src/routes/authentication/login.js')(app)
-
+app.use('/api/login', require('./src/routes/authentication/login.js'))
 app.use('/api/products', require('./src/routes/products/products.js'))
-// old way require('./src/routes/products/products.js')(app)
-
 // user endpoints
 require('./src/routes/users/create-user.js')(app)
 

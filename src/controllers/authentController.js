@@ -1,7 +1,12 @@
 const { User } = require('../db/sequelize')
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
-const privateKey = require('../authentication/private-key')
+
+if (process.env.NODE_ENV !== 'production') {
+    require('dotenv').config()
+ }
+
+const privateKey = process.env.ACCESS_TOKEN_SECRET
 
 const login = (req, res) => {
     User.findOne({ where: 

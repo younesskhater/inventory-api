@@ -1,7 +1,7 @@
 
 if (process.env.NODE_ENV !== 'production') {
     require('dotenv').config()
-  }
+}
 
   const domainsFromEnv = process.env.CORS_DOMAINS || ""
      const whitelist = domainsFromEnv.split(',');
