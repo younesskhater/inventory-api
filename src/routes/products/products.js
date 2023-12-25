@@ -1,23 +1,15 @@
 const express = require('express')
+const auth = require('../../authentication/auth.js')
 const router = express.Router()
+const productsController = require('../../controllers/productsController.js')
 
 router.route('/')
-    .get()
-    .post()
-    .put()
-    .delete()
+    .get(auth, productsController.getProducts)
+    .post(auth, productsController.createProduct)
+    .put(auth, productsController.updateProduct)
+    .delete(auth, productsController.deleteProduct)
 
 router.route('/:id')
-    .get()
-
-    const productsRoutes = (app) => {
-        // endpoints for products
-        require('./find-products.js')(app)
-        require('./find-product.js')(app)
-        require('./create-product.js')(app)
-        require('./update-product.js')(app)
-        require('./delete-product.js')(app)
+    .get(auth, productsController.findProductById)
     
-    }
-    
-    module.exports = productsRoutes
+module.exports = router

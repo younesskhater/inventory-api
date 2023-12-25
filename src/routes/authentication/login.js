@@ -5,7 +5,6 @@ const privateKey = require('../../authentication/private-key')
 
 module.exports = (app) => {
     app.post('/api/login', (req, res) => {
-        console.log(' ******* Authent ***** > ', req.body)
         User.findOne({ where: 
             { email: req.body.email }
         }).then(user => {

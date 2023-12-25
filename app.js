@@ -4,7 +4,7 @@ const favicon = require('serve-favicon')
 const bodyParser = require('body-parser')
 const sequelize = require('./src/db/sequelize')
 const cors = require('cors');
-const corsOptions = require('./corsConfig.js')
+const corsOptions = require('./src/config/corsConfig.js')
 
 const app = express()
 const port = process.env.PORT || 3200
@@ -27,14 +27,13 @@ sequelize.initDb().then(_ => {
 // login endpoint
 require('./src/routes/authentication/login.js')(app)
 
-require('./src/routes/products/products.js')(app)
+app.use('/api/products', require('./src/routes/products/products.js'))
+// old way require('./src/routes/products/products.js')(app)
 
 // user endpoints
 require('./src/routes/users/create-user.js')(app)
 
 app.use(express.static(path.join(__dirname, 'client', 'build')))
-
-// app.use('/api/products', require('./src/routes/products'))
 
 // serve up the index.html if express does'nt recognize the route
 // app.get('*', function (_, res) {
