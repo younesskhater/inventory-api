@@ -35,17 +35,20 @@ module.exports = (sequelize, DataTypes) => {
      },
      password: {
          type: DataTypes.STRING,
-         allowNull: true,
+         allowNull: false,
          get() {
              return this.getDataValue('password')
          },
          set(password) {
              this.setDataValue('password', password
              )
-         },
-         validate: {
          }
-     }
+     },
+     isActive: {
+        type: DataTypes.BOOLEAN,
+        allowNull: false,
+        defaultValue: true
+    }
     },
     {
      timestamps: true,

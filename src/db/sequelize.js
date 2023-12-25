@@ -16,10 +16,10 @@ const Warehouse = WarehouseModel(sequelize, DataTypes)
 
 Product.belongsTo(Category)
 
-const force = { force: true };
+const forceSync = { force: true };
 const initDb = () => {
-    return sequelize.sync().then(async () => { 
-        // await insertMocks(Product, User, Warehouse)
+    return sequelize.sync(forceSync).then(async () => { 
+        Boolean(forceSync.force) && await insertMocks(Product, User, Warehouse)
         console.log('la base de donnée a bien été synchronisée') 
     })
 }

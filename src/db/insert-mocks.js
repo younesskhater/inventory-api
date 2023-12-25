@@ -5,7 +5,6 @@ const warehouseMock = require('./mocks/mock-warehouse')
 const bcrypt = require("bcrypt");
 
 const insertMocks = (Product, User, Warehouse) => {
-    console.log('mocks insert')
     productsMock.forEach(product => {
         Product.create(product).then(product => console.log(product.toJSON()))
     })
