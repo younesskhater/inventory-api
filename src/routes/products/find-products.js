@@ -1,6 +1,6 @@
 const { Op } = require('sequelize')
-const { Product } = require('../db/sequelize')
-const auth = require('../authentication/auth')
+const { Product } = require('../../db/sequelize')
+const auth = require('../../authentication/auth')
 
 module.exports = (app) => {
     app.get('/api/products', auth, (req, res) => {

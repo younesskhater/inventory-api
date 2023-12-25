@@ -1,5 +1,5 @@
-const auth = require('../authentication/auth')
-const { Product } = require('../db/sequelize')
+const auth = require('../../authentication/auth')
+const { Product } = require('../../db/sequelize')
 
 module.exports = (app) => {
     app.delete('/api/products/:id', auth, (req, res) => {

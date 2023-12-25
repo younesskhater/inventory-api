@@ -9,8 +9,6 @@ module.exports = (app) => {
         User.findOne({ where: 
             { email: req.body.email }
         }).then(user => {
-            console.log('********* USER Found ******')
-            
             if (user) {
                 bcrypt.compare(req.body.password, user.password)
                     .then(isPasswordValid => {
