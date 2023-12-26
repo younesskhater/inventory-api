@@ -1,15 +1,15 @@
 const isCharacteristicsValid = (characteristics) => {
-    const characteristicsList = characteristics.split(',').map(characteristic => { 
-        const keyValue = characteristic.split(':')
-        return keyValue[0]
-    })
-    if (characteristicsList.length > 10) {
-        throw new Error('Characteristics can\'t exceed 10')
-    }
-    const hasDuplication = new Set(characteristicsList).size !== characteristicsList.length;
-    if (hasDuplication) {
-        throw new Error('Characteristics should not be duplicated')
-    }
+        const characteristicsList = characteristics?.split(',').map(characteristic => { 
+            const keyValue = characteristic.split(':')
+            return keyValue[0]
+        })
+        if (characteristicsList.length > 10) {
+            throw new Error('Characteristics can\'t exceed 10')
+        }
+        const hasDuplication = new Set(characteristicsList).size !== characteristicsList.length;
+        if (hasDuplication) {
+            throw new Error('Characteristics should not be duplicated')
+        }
 }
 module.exports = (sequelize, DataTypes) => {
    return sequelize.define('Product', {
@@ -81,7 +81,7 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.STRING,
         allowNull: true,
         get() {
-            return this.getDataValue('characteristics').split(',').map(characteristic => { 
+            return this.getDataValue('characteristics')?.split(',').map(characteristic => { 
                 const keyValue = characteristic.split(':')
                 return { [keyValue[0]]: keyValue[1] }
             })

@@ -7,9 +7,10 @@ import Lock from '@mui/icons-material/Lock';
 import AuthContext from '../../contexts/AuthProvider';
 import { useNavigate } from 'react-router-dom';
 
+// Move login folder to pages
 const LOGIN_URL = `${process.env.NODE_ENV === 'development' ? process.env.REACT_APP_BASE_URL: '' }/api/login`
-console.log(process.env)
-export default function Signup() {
+
+export default function Signin() {
 
     const { setAuth } = useContext(AuthContext)
     const navigate = useNavigate()
@@ -31,21 +32,22 @@ export default function Signup() {
       setErrorMsg('')
     }, [email, password])
 
-      const signup = () => {
+      const signin = () => {
         setLoading(true);
         fetch(LOGIN_URL, {
             method: "post",
             headers: {
                  "Content-Type": "application/json"
             },
+            credentials: 'include',
             body: JSON.stringify({email, password})
         })
           .then((resp) => { 
             return resp.json()
           })
           .then((resp) => {
-            if (resp.token) {
-              setAuth({user: resp.userData, accessToken: resp.token })
+            if (resp.accessToken) {
+              setAuth({user: resp.userData, accessToken: resp.accessToken })
               navigate('/dashboard', { replace: true})
             } else {
               setErrorMsg(resp.message)
@@ -85,7 +87,7 @@ export default function Signup() {
             <TextField id="input-pwd" type='password' label="Password" 
               value={password} onChange={(e) => setPassword(e.target.value)} variant="standard" required/>
           </Box>
-          <Button variant="contained" onClick={signup}>Login</Button>
+          <Button variant="contained" onClick={signin}>Login</Button>
           <p> Need and account ?</p>
         </Grid>
     </Grid>

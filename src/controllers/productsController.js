@@ -66,6 +66,7 @@ const updateProduct = (req, res) => {
             })
     })
     .catch(error => {
+        console.log(error)
         if (error instanceof UniqueConstraintError) {
             if(error.errors.some(error => error.type === 'unique violation' && error.path === 'products_name_category')) {
                 return res.status(422).json({ message : 'the name of a product should be unique for the same category', error })

@@ -2,20 +2,21 @@ const jwt = require('jsonwebtoken')
 
 if (process.env.NODE_ENV !== 'production') {
     require('dotenv').config()
- }
+}
 
-const privateKey = process.env.ACCESS_TOKEN_SECRET
+ const accessPrvtKey = process.env.ACCESS_TOKEN_SECRET
+ const refreshPrvtKey = process.env.ACCESS_TOKEN_SECRET
 
 module.exports = (req, res, next) => {
 
-    const authorizationHeader = req.headers.authorization
+    const authorizationHeader = req.headers.authorization // Bearer token
 
     if (!authorizationHeader) {
         return res.status(401).json({ message: 'You are not authorized to access the API' })
     }
 
     const token = authorizationHeader.split(' ')[1]
-    const decodedToken = jwt.verify(token, privateKey, (error, decodedToken) => {
+    jwt.verify(token, accessPrvtKey, (error, decodedToken) => {
         if (error) {
             return res.status(401).json({ message: 'You are not authorized to access the API', error })
         }

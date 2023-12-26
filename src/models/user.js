@@ -21,33 +21,37 @@ module.exports = (sequelize, DataTypes) => {
             notNull: { msg: 'the first name can not be null'}
         }
     },
-     email: {
-         type: DataTypes.STRING,
-         allowNull: false,
-         unique: {
-            msg: 'There is already an account with this email'
-         },
-         validate: {
-             notEmpty: { msg: 'Please entrer your email'},
-             notNull: { msg: 'the email can not be null'},
-             isEmail: true
-         }
-     },
-     password: {
-         type: DataTypes.STRING,
-         allowNull: false,
-         get() {
-             return this.getDataValue('password')
-         },
-         set(password) {
-             this.setDataValue('password', password
-             )
-         }
-     },
-     isActive: {
-        type: DataTypes.BOOLEAN,
+    email: {
+        type: DataTypes.STRING,
         allowNull: false,
-        defaultValue: true
+        unique: {
+        msg: 'There is already an account with this email'
+        },
+        validate: {
+            notEmpty: { msg: 'Please entrer your email'},
+            notNull: { msg: 'the email can not be null'},
+            isEmail: true
+        }
+    },
+    password: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        get() {
+            return this.getDataValue('password')
+        },
+        set(password) {
+            this.setDataValue('password', password
+            )
+        }
+    },
+    isActive: {
+    type: DataTypes.BOOLEAN,
+    allowNull: false,
+    defaultValue: true
+    },
+    refreshToken: {
+        type: DataTypes.STRING,
+        allowNull: true
     }
     },
     {

@@ -1,15 +1,15 @@
 const express = require('express')
-const auth = require('../../authentication/auth.js')
 const router = express.Router()
 const productsController = require('../../controllers/productsController.js')
 
 router.route('/')
-    .get(auth, productsController.getProducts)
-    .post(auth, productsController.createProduct)
-    .put(auth, productsController.updateProduct)
-    .delete(auth, productsController.deleteProduct)
+    .get(productsController.getProducts)
+    .post(productsController.createProduct)
+    .put(productsController.updateProduct)
+    .delete(productsController.deleteProduct)
 
 router.route('/:id')
-    .get(auth, productsController.findProductById)
+    .get(productsController.findProductById)
+    .put(productsController.updateProduct)
     
 module.exports = router
