@@ -1,10 +1,11 @@
 
 const productsMock = require('./mocks/mock-products');
 const usersMock = require('./mocks/mock-users');
+const rolesMock = require('./mocks/mock-roles');
 const warehouseMock = require('./mocks/mock-warehouse')
 const bcrypt = require("bcrypt");
 
-const insertMocks = (Product, User, Warehouse) => {
+const insertMocks = (Product, User, Warehouse, Role) => {
     productsMock.forEach(product => {
         Product.create(product).then(product => console.log(product.toJSON()))
     })
@@ -18,6 +19,10 @@ const insertMocks = (Product, User, Warehouse) => {
 
     warehouseMock.forEach(warehouse => {
         Warehouse.create(warehouse).then(console.log('Warehouse created'))
+    })
+
+    rolesMock.forEach(role => {
+        Role.create(role).then(console.log('Role created'))
     })
 
 }
