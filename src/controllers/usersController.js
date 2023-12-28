@@ -1,50 +1,71 @@
-const { User } = require('../db/sequelize')
+const { User, Role } = require('../db/sequelize')
 const { Op, UniqueConstraintError, ValidationError } = require('sequelize')
+const bcrypt = require('bcrypt')
 
 const getUsers = (req, res) => {
-    if (req.query.firstName) {
-        const firstName = req.query.firstName
-        User.findAndCountAll({ 
+    if (req.query.searchText || req.query.limit) {
+        const searchText = req.query.searchText
+        User.findAndCountAll({
             where: { 
-                firstName: {
-                    // The %signs are wildcard characters that match any sequence of characters before and after the searchText
-                    [Op.like]: `%${firstName}%`,
-                }
+                [Op.or]: [
+                    {
+                        lastName: {
+                            // The %signs are wildcard characters that match any sequence of characters before and after the searchText
+                            [Op.like]: `%${searchText}%`,
+                        },
+                    },
+                    { firstName: { [Op.like]: `%${searchText}%` }},
+                    { email: { [Op.like]: `%${searchText}%` }}
+                ]
             },
-            order: ['firstName'],
-            limit: parseInt(req.query.limit) || 1,
+            order: ['lastName'],
+            limit: parseInt(req.query.limit) || 100,
             skip: parseInt(req.query.skip) || 0,
         })
         .then(users => res.json({ message: 'Users searched', data: users}))
     } else {
-        User.findAll({ order: ['firstName'] })
+        User.findAll({ order: ['lastName'] })
     .then(users => res.json({message: 'All Users', data: users}))
     .catch(error => res.status(500).json({ message: 'users list couldn\'t be retrieved, please retry later', error}))
     }
 }
 
-const createUser = (req, res) => {
+const createUser = async (req, res) => {
+
+    if (!req.roles.includes('ADMIN')) {
+        return res.status(403).json({ message: 'You don\'t have the permission'})
+    }
     // check if required fields are filled
     // check if user is not duplicated (email)
     // if everything's good, crypt the password and create a new user object
+    try {
+        req.body.password = await bcrypt.hash(req.body.password,10)
+        const { roles, ...userWithoutRoles } = req.body
 
-    bcrypt.hash(req.body.password,10).then(hash => {
-        req.body.password = hash
-        User.create(req.body)
-        .then(user => res.json({ message: 'the user has been created', data: user}))
-    })
-    .catch(error => {
+        const newUser = await User.create(userWithoutRoles)
+        let { password, ...createdUser } = newUser.toJSON()
+        if (roles?.length) {
+            userRoles = await Role.findAll({ where: { code: roles}})
+            await newUser.addRoles(userRoles)
+            createdUser = await User.findByPk(newUser.id, { include: [{model: Role, as: 'roles', through: { attributes: [] }}]})
+            createdUser.password = undefined
+        }
+
+    res.status(200).json({ message: 'the user has been created', data: createdUser})
+    }
+    catch(error) {
         if (error instanceof ValidationError) {
             return res.status(400).json({message: error.message, error})
         }
+        console.log(error)
         res.status(500).json({ message: 'We couldn\'t create the user, please try later', error })
-    })
+    }
 }
 
 const updateUser = (req, res) => {
     const id = req.params.id;
     User.update(req.body, { 
-        where: { id: id }
+        where: { id }
         })
     .then(_ => {
         return User.findByPk(id)
@@ -57,8 +78,8 @@ const updateUser = (req, res) => {
     })
     .catch(error => {
         if (error instanceof UniqueConstraintError) {
-            if(error.errors.some(error => error.type === 'unique violation' && error.path === 'products_name_category')) {
-                return res.status(422).json({ message : 'the name of a User should be unique for the same category', error })
+            if(error.errors.some(error => error.type === 'unique violation' && error.path === 'user_email')) {
+                return res.status(422).json({ message : 'the email of a User should be unique', error })
             }
         }
         if (error instanceof ValidationError) {

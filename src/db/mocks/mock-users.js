@@ -2,7 +2,8 @@ const usersMock = [{
     firstName:'Y',
     lastName:'Khater',
     email: 'you@gmail.com',
-    password: '123'
+    password: '123',
+    roles : ["INVENTORY_MANAGER", "ADMIN"]
 },
 {
     firstName:'Admin',

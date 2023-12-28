@@ -42,7 +42,6 @@ module.exports = (sequelize, DataTypes) => {
      hooks: {
         beforeSave: (role, options) => {
           // Set code based on name
-          console.log(options)
           if (role.name) {
             role.code = upperCase(role.name).replace(' ', '_');
           }

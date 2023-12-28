@@ -28,8 +28,8 @@ app.use(cookieParser())
 console.log('trying to connect to db .......')
 sequelize.initDb().then(_ => {
    app.listen( port, () => console.log(`notre application node est démarrée sur : ${process.env.HOST || port}`))
-}).catch(_ => {
-   console.log('could not connect to database please try again')
+}).catch( (error) => {
+   console.log('could not connect to database please try again\n', error)
    process.exit(1)
 })
 
@@ -42,8 +42,9 @@ app.use('/api/logout', require('./src/routes/authentication/logout.js'))
 // put authorization middleware only before routes that needs authorization
 app.use(auth)
 app.use('/api/products', require('./src/routes/products/products.js'))
+app.use('/api/users', require('./src/routes/users/users.js'))
 // user endpoints
-require('./src/routes/users/create-user.js')(app)
+// require('./src/routes/users/create-user.js')(app)
 
 // serve up the index.html if express does'nt recognize the route
 // app.get('*', function (_, res) {

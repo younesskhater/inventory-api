@@ -9,6 +9,8 @@ const InventoryModel = require('../models/inventory')
 const BusinessUnitModel = require('../models/businessUnit')
 
 const insertMocks = require("./insert-mocks")
+const warehouse = require("../models/warehouse")
+const inventory = require("../models/inventory")
 
 console.log('----- creating sequelize -------')
 let sequelize = dbConfig(Sequelize)
@@ -24,8 +26,12 @@ const BusinessUnit = BusinessUnitModel(sequelize, DataTypes)
 Category.hasMany(Product)
 Product.belongsTo(Category)
 
-User.hasMany(Role)
+User.belongsToMany(Role, { as:'roles', through: 'UserRole'})
+Role.belongsToMany(User, { as: 'users', through: 'UserRole'})
 
+// inventory has information between a warehouse and a product
+Inventory.belongsTo(Warehouse)
+Inventory.belongsTo(Product)
 
 
 const forceSync = { force: true };
