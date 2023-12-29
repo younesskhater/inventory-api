@@ -1,18 +1,18 @@
-import React, { useContext, useEffect, useRef, useState } from 'react'
+import { useContext, useEffect, useRef, useState } from 'react'
 import { Box, Button } from '@mui/material'
 import TextField from '@mui/material/TextField';
 import Grid from '@mui/material/Grid';
 import AccountCircle from '@mui/icons-material/AccountCircle';
 import Lock from '@mui/icons-material/Lock';
-import AuthContext from '../../contexts/AuthProvider';
+import AuthContext from '../../../contexts/AuthProvider';
 import { useNavigate } from 'react-router-dom';
 
 // Move login folder to pages
-const LOGIN_URL = `${process.env.NODE_ENV === 'development' ? process.env.REACT_APP_BASE_URL: '' }/api/login`
+const LOGIN_URL = `${process.env.REACT_APP_BASE_URL || '' }/api/login`
 
 export default function Signin() {
 
-    const { setAuth } = useContext(AuthContext)
+    const { auth, setAuth } = useContext(AuthContext)
     const navigate = useNavigate()
 
     const emailRef = useRef()
@@ -24,6 +24,7 @@ export default function Signin() {
 
     const [loadig, setLoading] = useState(false)
 
+    console.log('Loging ', auth)
     useEffect(() => {
       emailRef.current.focus();
     }, [])
@@ -43,12 +44,13 @@ export default function Signin() {
             body: JSON.stringify({email, password})
         })
           .then((resp) => { 
+            console.log('login ', resp)
             return resp.json()
           })
           .then((resp) => {
             if (resp.accessToken) {
               setAuth({user: resp.userData, accessToken: resp.accessToken })
-              navigate('/dashboard', { replace: true})
+              navigate('/', { replace: true})
             } else {
               setErrorMsg(resp.message)
               errorRef.current.focus()

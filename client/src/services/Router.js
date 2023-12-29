@@ -1,10 +1,11 @@
 import { createBrowserRouter } from 'react-router-dom'
 import Dashboard from '../components/dashboard/Dashboard'
-import Login from '../components/login/Login';
+import Login from '../components/pages/login/Login';
 import ProductDetails from '../components/pages/products/ProductDetails';
 import Layout from '../components/layout/Layout';
 import NotFound from '../components/pages/not-found/NotFound';
 import Configuration from '../components/pages/configuration/Configuration';
+import Products from '../components/pages/products/Products';
 
 const router = createBrowserRouter([
   {
@@ -13,7 +14,7 @@ const router = createBrowserRouter([
     errorElement: <NotFound />,
     children: [
       {
-        path: 'dashboard',
+        path: '',
         element: <Dashboard />
       },
       {
@@ -21,7 +22,7 @@ const router = createBrowserRouter([
         children: [
           {
             path: '',
-            element: <h2>Products List</h2>
+            element: <Products />
           },
           {
             path: ':id',
@@ -30,7 +31,7 @@ const router = createBrowserRouter([
         ]
       },
       {
-        path: '/configuration',
+        path: '/configuration/users',
         element: <Configuration />,
         children: [
           {
@@ -38,8 +39,8 @@ const router = createBrowserRouter([
             element: <h2>Users List</h2>
           },
           {
-            path: 'users',
-            element: <h2>Users List</h2>
+            path: 'test',
+            element: <h2>test</h2>
           },
           {
             path: 'roles',
