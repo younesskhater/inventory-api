@@ -5,7 +5,7 @@ import Grid from '@mui/material/Grid';
 import AccountCircle from '@mui/icons-material/AccountCircle';
 import Lock from '@mui/icons-material/Lock';
 import AuthContext from '../../../contexts/AuthProvider';
-import { useNavigate } from 'react-router-dom';
+import { NavLink, useNavigate, redirect } from 'react-router-dom';
 
 // Move login folder to pages
 const LOGIN_URL = `${process.env.REACT_APP_BASE_URL || '' }/api/login`
@@ -24,7 +24,6 @@ export default function Signin() {
 
     const [loadig, setLoading] = useState(false)
 
-    console.log('Loging ', auth)
     useEffect(() => {
       emailRef.current.focus();
     }, [])
@@ -43,8 +42,7 @@ export default function Signin() {
             credentials: 'include',
             body: JSON.stringify({email, password})
         })
-          .then((resp) => { 
-            console.log('login ', resp)
+          .then((resp) => {
             return resp.json()
           })
           .then((resp) => {

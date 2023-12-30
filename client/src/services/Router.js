@@ -1,4 +1,4 @@
-import { createBrowserRouter } from 'react-router-dom'
+import { createBrowserRouter, Navigate } from 'react-router-dom'
 import Dashboard from '../components/dashboard/Dashboard'
 import Login from '../components/pages/login/Login';
 import ProductDetails from '../components/pages/products/ProductDetails';
@@ -7,10 +7,10 @@ import NotFound from '../components/pages/not-found/NotFound';
 import Configuration from '../components/pages/configuration/Configuration';
 import Products from '../components/pages/products/Products';
 
-const router = createBrowserRouter([
+const router = (isAuthenticated) => createBrowserRouter([
   {
     path: '/',
-    element: <Layout />,
+    element: !isAuthenticated ? <Navigate to="/login" /> : <Layout />,
     errorElement: <NotFound />,
     children: [
       {
@@ -52,7 +52,7 @@ const router = createBrowserRouter([
   },
   {
     path: 'login',
-    element: <Login />
+    element: isAuthenticated ? <Navigate to="/" /> : <Login />
   }
 ])
 

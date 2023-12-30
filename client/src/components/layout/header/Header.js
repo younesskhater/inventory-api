@@ -11,8 +11,6 @@ export default function Header() {
 
   const navigate = useNavigate()
 
-  console.log('HEADER ', auth)
-
   const logout = () => {
         fetch(LOGOUT_URL, {
             method: "get",
@@ -42,9 +40,10 @@ export default function Header() {
       <nav>
         <NavLink to="/">Dashboard</NavLink>
         <NavLink to="/products">Products</NavLink>    
-        <NavLink to="/configuration">Configuration</NavLink>
+        <NavLink to="/configuration/users">Configuration</NavLink>
+        <NavLink to="/login">login</NavLink>
 
-        { auth.accessToken ? <button onClick={logout}>Logout</button> : <NavLink to="/login">Logout</NavLink>}
+        { auth.accessToken ? <button onClick={logout}>Logout</button> : <NavLink to="/login">Login</NavLink>}
         
       </nav>
     </header>
