@@ -7,7 +7,9 @@ if (process.env.NODE_ENV !== 'production') {
  }
 
 const accessPrvtKey = process.env.ACCESS_TOKEN_SECRET
-const refreshPrvtKey = process.env.ACCESS_TOKEN_SECRET
+const refreshPrvtKey = process.env.REFRESH_TOKEN_SECRET
+const accessTokenExpTime = process.env.ACCESS_TOKEN_EXP_TIME
+const refreshTokenExpTime = process.env.REFRESH_TOKEN_EXP_TIME
 const oneDayInMiliseconds = 24 * 60 * 60 * 1000
 
 const login = (req, res) => {
@@ -30,12 +32,12 @@ const login = (req, res) => {
                     const accessToken = jwt.sign(
                         { email: user.email, roles },
                         accessPrvtKey,
-                        { expiresIn: '1d'}
+                        { expiresIn: accessTokenExpTime}
                     )
                     const newRefreshToken = jwt.sign(
                         { email: user.email },
                         refreshPrvtKey,
-                        { expiresIn: '2d'}
+                        { expiresIn: refreshTokenExpTime}
                     )
                     const { password, refreshToken, ...userData } = user.toJSON()
 
@@ -44,8 +46,8 @@ const login = (req, res) => {
                     res.cookie('jwt', newRefreshToken, { 
                         httpOnly: true, 
                         sameSite: 'None',
+                        secure: true,
                         maxAge: oneDayInMiliseconds // search for the difference between maxeAge and expiration
-                        // secure: true
                     })
                     return res.status(200).json({ message: 'authenticated successufully', userData,  accessToken })
                 })

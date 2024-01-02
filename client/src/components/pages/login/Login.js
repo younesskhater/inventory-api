@@ -1,18 +1,21 @@
-import { useContext, useEffect, useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { Box, Button } from '@mui/material'
 import TextField from '@mui/material/TextField';
 import Grid from '@mui/material/Grid';
 import AccountCircle from '@mui/icons-material/AccountCircle';
 import Lock from '@mui/icons-material/Lock';
-import AuthContext from '../../../contexts/AuthProvider';
-import { NavLink, useNavigate, redirect } from 'react-router-dom';
+import { useAuth } from '../../../contexts/AuthProvider';
+import { useLocation, useNavigate } from 'react-router-dom';
+import useRefreshToken from '../../../shared/hooks/useRefreshToken';
 
 // Move login folder to pages
-const LOGIN_URL = `${process.env.REACT_APP_BASE_URL || '' }/api/login`
+const LOGIN_URL = `${process.env.NODE_ENV !== 'production' ? process.env.REACT_APP_BASE_URL : '' }/api/login`
 
 export default function Signin() {
 
-    const { auth, setAuth } = useContext(AuthContext)
+    const { auth, setAuth } = useAuth()
+    const refreshToken = useRefreshToken()
+
     const navigate = useNavigate()
 
     const emailRef = useRef()
@@ -24,7 +27,21 @@ export default function Signin() {
 
     const [loadig, setLoading] = useState(false)
 
+    const location = useLocation()
+    const pathIfLogged = location.state?.from.pathname || '/'
+
     useEffect(() => {
+      if (!auth.accessToken) {
+        const executeRefreshToken = async () => {
+          const newAccessToken = await refreshToken()
+          if (newAccessToken) {
+            navigate(pathIfLogged)
+          }
+        }
+        executeRefreshToken()
+      } else {
+        navigate(pathIfLogged)
+      }
       emailRef.current.focus();
     }, [])
     
@@ -47,8 +64,8 @@ export default function Signin() {
           })
           .then((resp) => {
             if (resp.accessToken) {
-              setAuth({user: resp.userData, accessToken: resp.accessToken })
-              navigate('/', { replace: true})
+              setAuth({user: resp.userData, accessToken: resp.accessToken, isLogged: true })
+              navigate(pathIfLogged)
             } else {
               setErrorMsg(resp.message)
               errorRef.current.focus()
