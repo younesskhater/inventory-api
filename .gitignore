@@ -17,6 +17,8 @@ logs
 .env.test.local
 .env.production.local
 
+.notes
+
 # IDE - VSCode
 .vscode/*
 !.vscode/settings.json
